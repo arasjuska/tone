@@ -2,7 +2,7 @@
 
 namespace App\Models\GiftCards;
 
-use App\Enums\GiftCardStatus;
+use App\Enums\GiftCardStatusEnum;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -34,14 +34,14 @@ class GiftCardRedemption extends Model
     protected function statusBefore(): Attribute
     {
         return Attribute::make(
-            get: fn(int $value) => GiftCardStatus::from($value),
+            get: fn(int $value) => GiftCardStatusEnum::from($value),
         );
     }
 
     protected function statusAfter(): Attribute
     {
         return Attribute::make(
-            get: fn(int $value) => GiftCardStatus::from($value),
+            get: fn(int $value) => GiftCardStatusEnum::from($value),
         );
     }
 }

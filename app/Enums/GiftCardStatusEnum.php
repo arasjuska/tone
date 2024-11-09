@@ -5,7 +5,7 @@ namespace App\Enums;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum GiftCardStatus: int implements HasLabel, HasColor
+enum GiftCardStatusEnum: int implements HasLabel, HasColor
 {
     case PENDING_ACTIVATION = 0;
     case ACTIVE = 1;

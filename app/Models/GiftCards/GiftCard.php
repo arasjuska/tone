@@ -2,7 +2,7 @@
 
 namespace App\Models\GiftCards;
 
-use App\Enums\GiftCardStatus;
+use App\Enums\GiftCardStatusEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -29,7 +29,7 @@ class GiftCard extends Model
     ];
 
     protected $casts = [
-        'status' => GiftCardStatus::class,
+        'status' => GiftCardStatusEnum::class,
     ];
 
     protected static function boot(): void
@@ -61,8 +61,8 @@ class GiftCard extends Model
     {
         return Attribute::make(
             get: fn() => in_array($this->status, [
-                GiftCardStatus::ACTIVE,
-                GiftCardStatus::PARTIALLY_REDEEMED,
+                GiftCardStatusEnum::ACTIVE,
+                GiftCardStatusEnum::PARTIALLY_REDEEMED,
             ])
         );
     }

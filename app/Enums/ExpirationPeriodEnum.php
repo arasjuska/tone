@@ -4,7 +4,7 @@ namespace App\Enums;
 
 use Filament\Support\Contracts\HasLabel;
 
-enum ExpirationPeriod: int implements HasLabel
+enum ExpirationPeriodEnum: int implements HasLabel
 {
     case ONE_MONTH = 1;
     case TWO_MONTHS = 2;

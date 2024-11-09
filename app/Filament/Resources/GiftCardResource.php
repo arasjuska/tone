@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\ExpirationPeriod;
-use App\Enums\GiftCardStatus;
+use App\Enums\ExpirationPeriodEnum;
+use App\Enums\GiftCardStatusEnum;
 use App\Filament\Resources\GiftCardResource\Pages;
 use App\Filament\Resources\GiftCardResource\RelationManagers\GiftCardRedemptionsRelationManager;
 use App\Models\GiftCards\GiftCard;
@@ -29,13 +29,13 @@ class GiftCardResource extends Resource
                     Section::make([
                         Forms\Components\Select::make('status')
                             ->label(__('Status'))
-                            ->options(GiftCardStatus::class)
+                            ->options(GiftCardStatusEnum::class)
                             ->required()
                             ->hiddenOn('create'),
 
                         Forms\Components\Select::make('expiration_months')
                             ->label(__('Expiration months'))
-                            ->options(ExpirationPeriod::class)
+                            ->options(ExpirationPeriodEnum::class)
                             ->required(),
 
                         Forms\Components\TextInput::make('amount')

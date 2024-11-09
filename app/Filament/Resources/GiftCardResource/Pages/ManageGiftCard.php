@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\GiftCardResource\Pages;
 
-use App\Enums\GiftCardStatus;
+use App\Enums\GiftCardStatusEnum;
 use App\Filament\Resources\GiftCardResource;
 use App\Models\GiftCards\GiftCardRedemption;
 use App\Services\GiftCardService;
@@ -105,8 +105,8 @@ class ManageGiftCard extends ViewRecord
                                                             $statusBefore = $record->status;
                                                             $record->remaining_amount -= $data['amount'];
                                                             $record->status = (int)$record->remaining_amount === 0
-                                                                ? GiftCardStatus::REDEEMED
-                                                                : GiftCardStatus::PARTIALLY_REDEEMED;
+                                                                ? GiftCardStatusEnum::REDEEMED
+                                                                : GiftCardStatusEnum::PARTIALLY_REDEEMED;
 
                                                             $record->save();
 
