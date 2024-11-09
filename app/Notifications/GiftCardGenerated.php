@@ -15,7 +15,7 @@ class GiftCardGenerated extends Notification
 
     }
 
-    public function via(object $notifiable): array
+    public function via(): array
     {
         return ['mail'];
     }
@@ -23,8 +23,9 @@ class GiftCardGenerated extends Notification
     public function toMail(): MailMessage
     {
         return (new MailMessage)
-            ->subject(__('Your Gift Card Has Been Generated'))
-            ->line(__('Please find your gift card attached.'))
+            ->subject(__('You have received a gift card'))
+            ->line(__('You have received a gift card') . '.')
+            ->line(__('Please find your gift card attached') . '.')
             ->attach($this->pdfPath, [
                 'as' => 'gift-card.pdf',
                 'mime' => 'application/pdf',

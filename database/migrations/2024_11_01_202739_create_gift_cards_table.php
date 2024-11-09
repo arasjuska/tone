@@ -19,9 +19,7 @@ return new class extends Migration {
             $table->decimal('remaining_amount', 10);
             $table->string('email');
             $table->string('email_gift')->nullable();
-            $table->unsignedTinyInteger('expiration_months')->default(1);
-            $table->string('token')->nullable();
-            $table->timestamp('token_expire_at')->nullable();
+            $table->unsignedTinyInteger('expiration_months')->default(12);
             $table->timestamps();
         });
     }

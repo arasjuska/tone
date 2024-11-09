@@ -5,13 +5,12 @@ namespace App\Services;
 use App\Notifications\GiftCardGenerated;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
+use Filament\Notifications\Notification as FilamentNotification;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use LaravelDaily\Invoices\Classes\Buyer;
 use LaravelDaily\Invoices\Classes\InvoiceItem;
 use LaravelDaily\Invoices\Invoice;
@@ -31,11 +30,9 @@ class GiftCardService
      */
     public function generatePdf()
     {
-        $plainToken = Str::uuid();
-
-        $url = route('admin.gift-cards.validate', [
+        $url = route('filament.admin.resources.gift-cards.manage', [
             'record' => $this->giftCard->id,
-            'token' => $plainToken, // Use plain token here
+            'code' => $this->giftCard->code,
         ]);
 
         $qr_code = base64_encode(
@@ -45,15 +42,10 @@ class GiftCardService
                 ->generate($url)
         );
 
-        $this->giftCard->update([
-            'token' => Hash::make($plainToken),
-            'token_expire_at' => now()->addYears(2),
-        ]);
-
         try {
             $buyer = new Buyer([
-                'balance' => $this->giftCard->amount,
-                'end_date' => $this->giftCard->expires_at,
+                'amount' => $this->giftCard->remaining_amount,
+                'expires_at' => $this->giftCard->expires_at,
                 'qr_code' => $qr_code,
             ]);
 
@@ -77,7 +69,15 @@ class GiftCardService
 
             Storage::delete($pdfPath);
 
-            return redirect()->route('filament.admin.resources.gift-cards.edit', ['record' => $this->giftCard]);
+            FilamentNotification::make()
+                ->title(__('Pdf sent successfully'))
+                ->success()
+                ->send();
+
+            return redirect()->route('filament.admin.resources.gift-cards.manage', [
+                'record' => $this->giftCard,
+                'code' => $this->giftCard->code,
+            ]);
         } catch (Exception $e) {
             Log::error(__('Failed to generate or send PDF: ') . $e->getMessage());
             throw $e;

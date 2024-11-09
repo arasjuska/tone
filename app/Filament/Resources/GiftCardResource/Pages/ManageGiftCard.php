@@ -4,8 +4,8 @@ namespace App\Filament\Resources\GiftCardResource\Pages;
 
 use App\Enums\GiftCardStatus;
 use App\Filament\Resources\GiftCardResource;
-//use Filament\Actions\Action;
 use App\Models\GiftCards\GiftCardRedemption;
+use App\Services\GiftCardService;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\Actions\Action;
 use Filament\Infolists\Components\Fieldset;
@@ -16,9 +16,30 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
 
-class ValidateGiftCard extends ViewRecord
+class ManageGiftCard extends ViewRecord
 {
     protected static string $resource = GiftCardResource::class;
+
+    public function getHeading(): string
+    {
+        return __('Manage Gift Card');
+    }
+
+    public function getBreadcrumb(): string
+    {
+        return __('Manage');
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return !$this->record->isValid
+            ? []
+            : [
+                \Filament\Actions\Action::make('sendPdf')
+                    ->color('success')
+                    ->action(fn() => (new GiftCardService($this->record))->generatePdf()),
+            ];
+    }
 
     public function infolist(Infolist $infolist): Infolist
     {
@@ -107,15 +128,4 @@ class ValidateGiftCard extends ViewRecord
                     ]),
             ]);
     }
-
-//    public function invalidateGiftCard(): void
-//    {
-//        $this->record->update(['is_valid' => false]);
-//
-//        Notification::make()
-//            ->title(__('Gift card status updated'))
-//            ->body(__('The gift card has been marked as invalid'))
-//            ->success()
-//            ->send();
-//    }
 }

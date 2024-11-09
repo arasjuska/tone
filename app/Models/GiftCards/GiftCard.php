@@ -15,8 +15,6 @@ use Illuminate\Support\Str;
  * @property int $expiration_months
  * @property int $status
  * @property int $amount
- * @property string $token
- * @property Carbon $token_expire_at
  */
 class GiftCard extends Model
 {
@@ -28,13 +26,10 @@ class GiftCard extends Model
         'email',
         'email_gift',
         'expiration_months',
-        'token',
-        'token_expire_at',
     ];
 
     protected $casts = [
         'status' => GiftCardStatus::class,
-        'token_expire_at' => 'datetime',
     ];
 
     protected static function boot(): void
@@ -42,8 +37,8 @@ class GiftCard extends Model
         parent::boot();
 
         static::creating(function ($giftCard) {
-            $giftCard->code = $giftCard->code ?? Str::uuid();
-            $giftCard->remaining_amount = $giftCard->remaining_amount ?? $giftCard->amount;
+            $giftCard->code = Str::uuid();
+            $giftCard->remaining_amount = $giftCard->amount;
         });
     }
 

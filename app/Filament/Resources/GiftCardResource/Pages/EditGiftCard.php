@@ -3,9 +3,7 @@
 namespace App\Filament\Resources\GiftCardResource\Pages;
 
 use App\Filament\Resources\GiftCardResource;
-use App\Services\GiftCardService;
 use Filament\Actions;
-use Filament\Actions\Action;
 use Filament\Resources\Pages\EditRecord;
 
 class EditGiftCard extends EditRecord
@@ -14,15 +12,9 @@ class EditGiftCard extends EditRecord
 
     protected function getHeaderActions(): array
     {
-        $actions = [
+        return [
             Actions\DeleteAction::make(),
         ];
-
-        $this->record->is_valid && $actions[] = Actions\Action::make('sendPdf')
-            ->color('success')
-            ->action(fn() => (new GiftCardService($this->record))->generatePdf());
-
-        return $actions;
     }
 
     protected function mutateFormDataBeforeFill(array $data): array

@@ -178,8 +178,8 @@
         <strong>Jurgita</strong>
     </p>
 
-    <p class="price">{{ __('Value') }}: <strong>{{ $giftCard->buyer->balance }} €</strong></p>
-    <p class="expire">{{ __('Expires') }}: <strong>{{ $giftCard->buyer->end_date }}</strong></p>
+    <p class="price">{{ __('Value') }}: <strong>{{ $giftCard->buyer->amount }} €</strong></p>
+    <p class="expire">{{ __('Expires') }}: <strong>{{ $giftCard->buyer->expires_at }}</strong></p>
 
     <div class="qr-code">
         @if($giftCard->buyer->qr_code)

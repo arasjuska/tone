@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\GiftCardValidationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,9 +15,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')
         ->name('admin.')
         ->group(function () {
-            Route::middleware(['throttle:5,1'])
-                ->get('/gift-cards/{record}/validate/{token}', [GiftCardValidationController::class, 'validateGiftCard'])
-                ->name('gift-cards.validate');
+            //
         });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

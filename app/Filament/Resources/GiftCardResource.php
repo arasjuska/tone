@@ -11,13 +11,9 @@ use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Split;
 use Filament\Forms\Form;
-use Filament\Panel;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 
 class GiftCardResource extends Resource
 {
@@ -107,7 +103,16 @@ class GiftCardResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make(),
+                Tables\Actions\Action::make('manage')
+                    ->label(__('Manage'))
+                    ->icon('heroicon-s-eye')
+                    ->color('gray')
+                    ->url(fn($record): string => route(
+                        'filament.admin.resources.gift-cards.manage', [
+                        'record' => $record,
+                        'code' => $record->code,
+                    ],
+                    )),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -129,7 +134,7 @@ class GiftCardResource extends Resource
             'index' => Pages\ListGiftCards::route('/'),
             'create' => Pages\CreateGiftCard::route('/create'),
             'edit' => Pages\EditGiftCard::route('/{record}/edit'),
-            'view' => Pages\ViewGiftCard::route('/{record}/view'),
+            'manage' => Pages\ManageGiftCard::route('/{record}/manage/{code}'),
         ];
     }
 }
