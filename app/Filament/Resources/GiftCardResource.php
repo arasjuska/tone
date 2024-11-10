@@ -105,8 +105,7 @@ class GiftCardResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('manage')
                     ->label(__('Manage'))
-                    ->icon('heroicon-s-eye')
-                    ->color('gray')
+                    ->icon('heroicon-o-wrench-screwdriver')
                     ->url(fn($record): string => route(
                         'filament.admin.resources.gift-cards.manage', [
                         'record' => $record,

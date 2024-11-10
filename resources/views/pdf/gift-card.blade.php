@@ -49,7 +49,7 @@
             font-style: italic;
         }
 
-        .service-name, .master-name {
+        .phone-name, .master-name {
             font-size: 1.4em;
             background: rgba(248, 195, 208, 0.4);
             border-radius: 10px;
@@ -61,7 +61,7 @@
             letter-spacing: 1px;
         }
 
-        .service-name::before, .master-name::before {
+        .phone-name::before, .master-name::before {
             content: attr(data-label);
             display: block;
             font-weight: bold;
@@ -166,13 +166,10 @@
     <h2>{{ __('Gift card') }}</h2>
 
     <div class="from-to">
-        <p>A Gift From: <strong>[Your Name]</strong></p>
-        <p>To: <strong>[Recipient's Name]</strong></p>
+        <p>{{ __('Phone') }}: <strong>{{ $giftCard->buyer->phone }}</strong></p>
+{{--        <p>{{ __('Email') }}: <strong>{{ $giftCard->buyer->email }}</strong></p>--}}
+{{--        <p>{{ __('Code') }}: <strong>{{ $giftCard->buyer->code }}</strong></p>--}}
     </div>
-
-    <p class="service-name" data-label="{{ __('Service') }}">
-        <strong>Kobido veido masažas</strong>
-    </p>
 
     <p class="master-name" data-label="{{ __('Master') }}">
         <strong>Jurgita</strong>

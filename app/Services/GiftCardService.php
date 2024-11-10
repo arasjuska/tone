@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Enums\SystemSettingEnum;
+use App\Models\SystemSetting;
 use App\Notifications\GiftCardGenerated;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
@@ -22,31 +24,35 @@ class GiftCardService
         public Model $giftCard,
     )
     {
-        //
     }
 
     /**
+     * Generate and send PDF gift card.
+     *
      * @throws BindingResolutionException
      */
     public function generatePdf()
     {
-        $url = route('filament.admin.resources.gift-cards.manage', [
-            'record' => $this->giftCard->id,
-            'code' => $this->giftCard->code,
-        ]);
-
-        $qr_code = base64_encode(
-            QrCode::format('png')
-                ->size(300)
-                ->color(94, 59, 73)
-                ->generate($url)
-        );
-
         try {
+            $url = route('filament.admin.resources.gift-cards.manage', [
+                'record' => $this->giftCard->id,
+                'code' => $this->giftCard->code,
+            ]);
+
+            $qr_code = base64_encode(
+                QrCode::format('png')
+                    ->size(300)
+                    ->color(94, 59, 73)
+                    ->generate($url)
+            );
+
             $buyer = new Buyer([
                 'amount' => $this->giftCard->remaining_amount,
                 'expires_at' => $this->giftCard->expires_at,
                 'qr_code' => $qr_code,
+                'phone' => SystemSetting::getValue(SystemSettingEnum::PHONE),
+                'email' => SystemSetting::getValue(SystemSettingEnum::EMAIL),
+                'code' => $this->giftCard->code,
             ]);
 
             $placeholderItem = InvoiceItem::make('Gift Card')->pricePerUnit(0);
@@ -55,8 +61,6 @@ class GiftCardService
                 ->buyer($buyer)
                 ->addItem($placeholderItem);
 
-            $giftCard->stream();
-
             $pdf = Pdf::loadView('pdf.gift-card', compact('giftCard'));
 
             $fileName = now()->format('Y_m_d') . '_gift_card_' . $this->giftCard->id . '.pdf';
@@ -64,9 +68,12 @@ class GiftCardService
 
             Storage::put($pdfPath, $pdf->output());
 
-            Notification::route('mail', $this->giftCard->email_gift ?? $this->giftCard->email)
+            $recipientEmail = $this->giftCard->email_gift ?? $this->giftCard->email;
+
+            Notification::route('mail', $recipientEmail)
                 ->notify(new GiftCardGenerated($giftCard, Storage::path($pdfPath)));
 
+            // Delete the PDF after sending the notification
             Storage::delete($pdfPath);
 
             FilamentNotification::make()
